@@ -12,7 +12,6 @@ final class CategoryCollectionViewCell: UICollectionViewCell {
     
     private lazy var categoryNameLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = .label
         label.textAlignment = .center
         return label

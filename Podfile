@@ -7,5 +7,6 @@ target 'MovieAppProject' do
 
   # Pods for MovieAppProject
   pod "SnapKit"
+  pod 'Kingfisher'
 
 end

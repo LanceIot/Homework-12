@@ -1,18 +1,10 @@
-//
-//  PlacesViewController.swift
-//  MovieAppProject
-//
-//  Created by Админ on 25.01.2023.
-//
-
 import UIKit
 
 class PlacesViewController: UIViewController {
     
-    private let cinemaImages: [String] = ["kinopark", "kinopark1", "kinopark2", "kinopark3", "kinopark1", "kinopark2",]
-    private let cinemaTitles: [String] = ["Cinemax Dostyk Multiplex", "Lumiera Cinema (ЦУМ)", "Kinoforum 10 (ТРЦ Forum)", "Kinopark 10 (Есентай) IMAX", "Chaplin MEGA Alma-Ata (ул. Розыбакиева 247А)", "Chaplin MEGA Park (ул. Макатаева)",]
-    private let cinemaAdress: [String] = ["Самал-2, д. 111, уг.ул. Жолдасбекова, ТРЦ Дотык Плаза", "пр. Абылай хана, 62, Арбат", "ул. Сейфуллина, 617, ТРЦ Forum Almaty, 5-й этаж", "пр. Аль-Фараби, 77/8, ТЦ  Esentai Mall", "Ул. Розыбакиева 247А, ТРЦ MEGA Alma-Ata", "ул. Макатаева, 127, 3-й этаж",]
-    
+    var apiCallerForNowPlaying = APICallerForNowPlaying()
+    var movieList: [NowPlayingModel] = []
+        
     private let categoryList = Category.allCases
     
     // Creating Search Bar
@@ -94,21 +86,15 @@ extension PlacesViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-
-//End
-
 //MARK: - Table view data source methods
 
 extension PlacesViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        6
+        1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Identifiers.placesTableViewCell, for: indexPath) as! PlacesTableViewCell
-        cell.setImage(with: cinemaImages[indexPath.row])
-        cell.setTitle(with: cinemaTitles[indexPath.row])
-        cell.setAdress(with: cinemaAdress[indexPath.row])
         return cell
     }
     
@@ -120,7 +106,7 @@ extension PlacesViewController:UITableViewDataSource {
 extension PlacesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return tableView.frame.size.height
     }
 }
 
@@ -138,13 +124,17 @@ private extension PlacesViewController {
         movieSearchBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview().inset(10)
-            make.height.equalToSuperview().multipliedBy(0.05)
+            make.height.equalTo(view).multipliedBy(0.06)
+        }
+        
+        movieSearchBar.searchTextField.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         
         categoryCollectionView.snp.makeConstraints { make in
             make.top.equalTo(movieSearchBar.snp.bottom).offset(10)
             make.leading.trailing.equalToSuperview().inset(10)
-            make.height.equalToSuperview().multipliedBy(0.05)
+            make.height.equalTo(view).multipliedBy(0.06)
         }
         
         placesTableView.snp.makeConstraints { make in
