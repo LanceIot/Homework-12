@@ -28,7 +28,7 @@ final class TrendingCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with backdropPath: String) {
-        guard let url = URL(string: "\(Constants.Links.imageUrl)\(backdropPath)") else { fatalError("Incorrect link configure!")
+        guard let url = URL(string: "\(Constants.Links.image)\(backdropPath)") else { fatalError("Incorrect link configure!")
         }
         DispatchQueue.main.async {
             self.trendingImageView.kf.setImage(with: url)

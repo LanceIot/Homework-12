@@ -99,6 +99,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		844630D829953F2600F68A58 /* Damaged */ = {
+			isa = PBXGroup;
+			children = (
+				8490B7C1298FE35D009E6980 /* APICallerForNowPlaying.swift */,
+				8490B7BD298FC437009E6980 /* NowPlayingData.swift */,
+				8490B7BF298FC45C009E6980 /* NowPlayingModel.swift */,
+			);
+			path = Damaged;
+			sourceTree = "<group>";
+		};
 		8490B7B7298FB1A5009E6980 /* MovieViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -114,8 +124,8 @@
 		8490B7B8298FB1FD009E6980 /* PlacesViewController */ = {
 			isa = PBXGroup;
 			children = (
-				84B4C75429869A1F002E6979 /* PlacesTableViewCell.swift */,
 				8490B7BB298FBC60009E6980 /* NowPlayingCollectionViewCell.swift */,
+				84B4C75429869A1F002E6979 /* PlacesTableViewCell.swift */,
 			);
 			path = PlacesViewController;
 			sourceTree = "<group>";
@@ -151,12 +161,10 @@
 		84CB4384298D6CC4005D58F1 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				844630D829953F2600F68A58 /* Damaged */,
 				84CB4385298D6CDF005D58F1 /* APICaller.swift */,
 				84CB4387298D7177005D58F1 /* MovieData.swift */,
 				84CB4389298D732D005D58F1 /* MovieModel.swift */,
-				8490B7C1298FE35D009E6980 /* APICallerForNowPlaying.swift */,
-				8490B7BD298FC437009E6980 /* NowPlayingData.swift */,
-				8490B7BF298FC45C009E6980 /* NowPlayingModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";

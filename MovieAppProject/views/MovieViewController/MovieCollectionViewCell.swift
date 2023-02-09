@@ -52,7 +52,15 @@ final class MovieCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
+    func configure(with model: MovieModel) {
+        guard let url = URL(string: "\(Constants.Links.image)\(model.posterPath)") else {fatalError("Incorrect link to poster path!")}
+        let stringGenres = model.genreIds.map{ String($0) }
+        DispatchQueue.main.async {
+            self.posterImageView.kf.setImage(with: url)
+            self.movieNameLabel.text = model.title
+            self.genresNameLabel.text = stringGenres.joined(separator: ", ")
+        }
+    }
     
 }
 

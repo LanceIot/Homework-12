@@ -9,13 +9,14 @@ struct APICallerForNowPlaying {
     
     var delegate: APICallerForNowPlayingDelegate?
     
-    func fetchRequest() {
-        let urlString = "https://api.themoviedb.org/3/movie/now_playing?api_key=4bf7b5f6aa96f4f873c8a01385c2a5f1&language=en-US&page=1"
+    func fetchRequestt() {
+        let urlString = Constants.URLs.nowPlaying
         guard let url = URL(string: urlString) else { fatalError("Incorrect link!") }
         let task = URLSession.shared.dataTask(with: url) { data, _ , error in
             if let data, error == nil {
                 if let movieList = parseJSON(data) {
                     delegate?.didUpdateMovieList(with: movieList)
+                    print(data)
                 } else {
                     delegate?.didFailWithError(error!)
                 }

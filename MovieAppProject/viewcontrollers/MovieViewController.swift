@@ -10,7 +10,7 @@ import UIKit
 class MovieViewController: UIViewController {
     
     var apiCaller = APICaller()
-    var movieList: [MovieModel] = []
+    var allMoviesList: [[MovieModel]] = []
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -83,7 +83,11 @@ class MovieViewController: UIViewController {
 
 extension MovieViewController: APICallerDelegate {
     func didUpdateMovieList(with movieList: [MovieModel]) {
-        self.movieList = movieList
+        self.allMoviesList.append(movieList)
+        DispatchQueue.main.async {
+            self.trendingCollectionView.reloadData()
+            self.categoryTableView.reloadData()
+        }
     }
     
     func didFailWithError(_ error: Error) {
@@ -99,10 +103,13 @@ extension MovieViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if(collectionView == categoryCollectionView) {
+        if collectionView == categoryCollectionView {
             return categoryList.count
         }
-        return movieList.count
+        if allMoviesList.isEmpty{
+            return 0
+        }
+        return allMoviesList[0].count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -117,7 +124,7 @@ extension MovieViewController: UICollectionViewDataSource {
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.Identifiers.trendingCollectionViewCell, for: indexPath) as! TrendingCollectionViewCell
-        cell.configure(with: movieList[indexPath.item].backdropPath)
+        cell.configure(with: allMoviesList[0][indexPath.item].backdropPath)
         cell.layer.cornerRadius = 10
         cell.clipsToBounds = true
         return cell
@@ -146,7 +153,7 @@ extension MovieViewController: UICollectionViewDelegateFlowLayout {
 extension MovieViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return categoryList.count - 1
+        return categoryList.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -154,13 +161,17 @@ extension MovieViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Identifiers.categoryTableViewCell, for: indexPath)
+        if allMoviesList.isEmpty {
+            return UITableViewCell()
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Identifiers.categoryTableViewCell, for: indexPath) as! CategoryTableViewCell
+        cell.configure(with: allMoviesList[indexPath.section])
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = SectionHeaderView()
-        let title = String(categoryList[section + 1].rawValue.dropFirst())
+        let title = String(categoryList[section].rawValue.dropFirst())
         view.configure(with: title, number: 8)
         return view
     }
@@ -223,7 +234,7 @@ private extension MovieViewController {
             make.top.equalTo(trendingCollectionView.snp.bottom).offset(10)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
-            make.height.equalTo(view).multipliedBy(1.2)
+            make.height.equalTo(view).multipliedBy(1.6)
         }
     }
 }

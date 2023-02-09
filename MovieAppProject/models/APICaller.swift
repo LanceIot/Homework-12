@@ -10,29 +10,33 @@ struct APICaller {
     var delegate: APICallerDelegate?
     
     func fetchRequest() {
-        let urlString = "https://api.themoviedb.org/3/trending/movie/day?api_key=4bf7b5f6aa96f4f873c8a01385c2a5f1"
-        guard let url = URL(string: urlString) else { fatalError("Incorrect link!") }
-        let task = URLSession.shared.dataTask(with: url) { data, _ , error in
-            if let data, error == nil {
-                if let movieList = parseJSON(data) {
-                    delegate?.didUpdateMovieList(with: movieList)
+        for urlString in Constants.Values.urlList {
+            guard let url = URL(string: urlString) else { fatalError("Incorrect link!") }
+            let task = URLSession.shared.dataTask(with: url) { data, _ , error in
+                if let data, error == nil {
+                    if let movieList = parseJSON(data) {
+                        print(movieList[0].title)
+                        delegate?.didUpdateMovieList(with: movieList)
+                    } else {
+                        delegate?.didFailWithError(error!)
+                    }
                 } else {
                     delegate?.didFailWithError(error!)
                 }
-            } else {
-                delegate?.didFailWithError(error!)
             }
+            task.resume()
         }
-        task.resume()
     }
     
     func parseJSON(_ data: Data) -> [MovieModel]? {
         var movieList: [MovieModel] = []
         do {
             let decodedData = try JSONDecoder().decode(MovieData.self, from: data)
-            for movie in decodedData.results {
-                let movieModel = MovieModel(adult: movie.adult, backdropPath: movie.backdrop_path, id: movie.id, title: movie.title, description: movie.overview, posterPath: movie.poster_path, mediaType: movie.media_type, genreIds: movie.genre_ids, releaseDate: movie.release_date, voteAverage: movie.vote_average)
-                movieList.append(movieModel)
+            for model in decodedData.results {
+                if let backdropPath = model.backdrop_path {
+                    let movieModel = MovieModel(adult: model.adult, backdropPath: backdropPath, id: model.id, title: model.title, description: model.overview, posterPath: model.poster_path, genreIds: model.genre_ids, releaseDate: model.release_date, voteAverage: model.vote_average)
+                    movieList.append(movieModel)
+                }
             }
         } catch {
             print(error)

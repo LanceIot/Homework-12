@@ -3,7 +3,7 @@ import UIKit
 final class PlacesTableViewCell: UITableViewCell {
     
     var apiCallerForNowPlaying = APICallerForNowPlaying()
-    var movieList: [NowPlayingModel] = []
+    var movieListForNowPlaying: [NowPlayingModel] = []
     
     private lazy var nowPlayingCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -17,14 +17,14 @@ final class PlacesTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        setupViews()
-        setupConstraints()
-        
         nowPlayingCollectionView.dataSource = self
         nowPlayingCollectionView.delegate = self
         apiCallerForNowPlaying.delegate = self
         
-        apiCallerForNowPlaying.fetchRequest()
+        apiCallerForNowPlaying.fetchRequestt()
+        
+        setupViews()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -36,7 +36,10 @@ final class PlacesTableViewCell: UITableViewCell {
 
 extension PlacesTableViewCell: APICallerForNowPlayingDelegate {
     func didUpdateMovieList(with movieList: [NowPlayingModel]) {
-        self.movieList = movieList
+        self.movieListForNowPlaying = movieList
+        DispatchQueue.main.async {
+            self.nowPlayingCollectionView.reloadData()
+        }
     }
     
     func didFailWithError(_ error: Error) {
@@ -54,7 +57,7 @@ extension PlacesTableViewCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.Identifiers.nowPlayingCollectionViewCell, for: indexPath) as! NowPlayingCollectionViewCell
-        cell.configure(with: movieList[indexPath.item].posterPath, movieList[indexPath.item].title, movieList[indexPath.item].voteAverage)
+        cell.configure(with: movieListForNowPlaying[indexPath.item].posterPath, movieListForNowPlaying[indexPath.item].title, movieListForNowPlaying[indexPath.item].voteAverage)
         cell.layer.cornerRadius = 10
         cell.clipsToBounds = true
         return cell

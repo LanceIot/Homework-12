@@ -68,7 +68,7 @@ class NowPlayingCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with posterPath: String, _ title: String, _ voteNum: Double) {
-        guard let url = URL(string: "\(Constants.Links.imageUrl)\(posterPath)") else { fatalError("Incorrect link configure!")
+        guard let url = URL(string: "\(Constants.Links.image)\(posterPath)") else { fatalError("Incorrect link configure!")
         }
         DispatchQueue.main.async {
             self.nowPlayingImageView.kf.setImage(with: url)
